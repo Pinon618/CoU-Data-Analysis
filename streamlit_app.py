@@ -3,6 +3,7 @@ In an environment with streamlit, plotly and duckdb installed,
 Run with `streamlit run streamlit_app.py`
 """
 import random
+import duckdb
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
@@ -206,6 +207,38 @@ def top_least_product():
     st.subheader("Least 5 Products by Quantity Sold")
     st.plotly_chart(fig_least_5)
 
+def product_trend():
+    df['transaction_date'] = pd.to_datetime(df['transaction_date'])
+    df['month_year'] = df['transaction_date'].dt.to_period('M')
+    monthly_product_trends = df.groupby(['month_year', 'product_type'])['total_payment'].sum().reset_index()
+
+    monthly_product_trends['month_year'] = monthly_product_trends['month_year'].astype(str)
+    st.title('Monthly Product Type Sales Trends')
+
+    # Create the line plot using Plotly
+    fig = px.line(
+        monthly_product_trends,
+        x='month_year',
+        y='total_payment',
+        color='product_type',
+        title='Monthly Product Type Sales Trends',
+        labels={'month_year': 'Month', 'total_payment': 'Total Sales', 'product_type': 'Product Type'}
+    )
+    st.plotly_chart(fig)
+
+def product_dropdown():
+    st.title("Product Selection")
+
+    
+    product_types = df['product_type'].unique()
+    selected_product = st.selectbox("Select a Product Type", product_types)
+    filtered_data = df[df['product_type'] == selected_product]
+    unique_subcategories = filtered_data[['product_detail', 'unit_price']].drop_duplicates()
+
+    st.subheader(f"Unique Subcategories and Prices for {selected_product}")
+    st.write(unique_subcategories)
+
+
 def overview():
     
     col1, col2 = st.columns(2)
@@ -218,7 +251,7 @@ def overview():
         with subcol2:
             total_sell_qty()
             avg_sell_qty()
-
+    product_trend()
     # Section 1,2 with a chart
     with col2:
         monthly_chart()
@@ -232,18 +265,16 @@ def overview():
 
         with subcol4:
             each_product_sales()
-
+        product_dropdown()
     # Section 2,2 with 4 rows
     with col4:
         peak_hour()
 
         top_least_product()
 
-        st.subheader("Section 2,2 (3)")
-        st.write("Content for 2,2 (3)")
+        #product_trend()
 
-        st.subheader("Section 2,2 (4)")
-        st.write("Content for 2,2 (4)")
+        #product_dropdown()
 
 def main():
     st.sidebar.title("Filter")
