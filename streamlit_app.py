@@ -139,6 +139,7 @@ def avg_sales_per_locations():
     plt.tight_layout()
     st.pyplot(fig)
 
+
 def top_product():
     top_product = df.groupby('product_type')['total_payment'].sum().idxmax()
     top_product_sales = df.groupby('product_type')['total_payment'].sum().max()
@@ -158,8 +159,8 @@ def top_product():
     cheap_product = df.loc[df['unit_price'].idxmin(), 'product_type']
     cheap_product_price = df['unit_price'].min()
     st.markdown("""
-    <div style="border: 2px solid 
-    <h2 style="text-align:center; color:
+    <div style="border: 2px solid #007bff; padding: 15px; border-radius: 8px; background-color: #000000;">
+    <h2 style="text-align:center; color:#007bff;">Sales Analysis Summary</h2>
     <p><strong>Top Sales Product:</strong> {0} <br>(Total Sales: {1:.2f})</p>
     <p><strong>Top Sales Date:</strong> {2} <br>(Total Sales: {3:.2f})</p>
     <p><strong>Top Sales Quantity:</strong> {4} <br>(Quantity: {5})</p>
@@ -201,7 +202,7 @@ def peak_hour():
     fig.update_yaxes(title_text='Total Sales')
 
     
-    st.title("Overall Product Demands")
+    st.title("Overall Peak Hours")
     
     st.plotly_chart(fig)
 
@@ -228,7 +229,7 @@ def product_trend():
     monthly_product_trends = df.groupby(['month_year', 'product_type'])['total_payment'].sum().reset_index()
 
     monthly_product_trends['month_year'] = monthly_product_trends['month_year'].astype(str)
-    st.title('Monthly Product Type Sales Trends')
+    st.title('Monthly Product Demands')
 
     
     fig = px.line(
@@ -412,7 +413,7 @@ def Monthly_Sales_for_Astoria():
         title='Monthly Sales for Astoria',
         xaxis_title='Month',
         yaxis_title='Total Sales',
-        plot_bgcolor='white',
+        #plot_bgcolor='white',
         font_color='black'
     )
  
@@ -445,7 +446,7 @@ def Percentage_and_Quantity_of_Product_Types_Sold_in_Astoria():
     fig.update_layout(
         xaxis_title='Percentage of Total Sales',
         yaxis_title='Product Type',
-        plot_bgcolor='white',
+        #plot_bgcolor='white',
         font_color='black',
         yaxis=dict(
             title='Product Type',
@@ -581,7 +582,7 @@ def Astoria_Price_vs_Sell_Quantity():
     fig.update_layout(
         xaxis_title='Price',
         yaxis_title='Sell Quantity',
-        plot_bgcolor='white',  
+        #plot_bgcolor='white',  
         font_color='black',  
     )
  
@@ -606,7 +607,7 @@ def Hourly_Sales_in_Astoria():
     )
  
     fig.update_layout(
-        plot_bgcolor='white',  
+        #plot_bgcolor='white',  
         font_color='black',  
         xaxis_title='Hour',
         yaxis_title='Total Quantity Sold'
@@ -679,7 +680,7 @@ def Increasing_Demand_of_Product_Types_in_Astoria():
         title='Increasing Demand of Product Types in Astoria',
         xaxis_title='Transaction Date',
         yaxis_title='Cumulative Transaction Quantity',
-        plot_bgcolor='white',
+        #plot_bgcolor='white',
         font_color='black'
     )
  
@@ -702,7 +703,7 @@ def Top_5_Most_Expensive_Product_Types_in_Astoria_by_Unit_Price():
     )
 
     fig.update_layout(
-        plot_bgcolor='white',
+        #plot_bgcolor='white',
         font_color='black', 
         xaxis_title='Product Type',
         yaxis_title='Average Unit Price',
@@ -732,7 +733,7 @@ def Top_5_Cheapest_Product_Types_in_Astoria():
         color_discrete_sequence=['#CD5C5C']
     )
     fig.update_layout(
-        plot_bgcolor='white',  
+        #plot_bgcolor='white',  
         font_color='black',  
         xaxis_title='Product Type',
         yaxis_title='Average Unit Price',
@@ -917,7 +918,7 @@ def Monthly_Sales_for_Kitchen():
         title="Monthly Sales for Hell's Kitchen",
         xaxis_title='Month',
         yaxis_title='Total Sales',
-        plot_bgcolor='white',
+        #plot_bgcolor='white',
         font_color='black'
     )
 
@@ -941,7 +942,7 @@ def Quantity_of_Each_Product_Type_Sold_in_Kitchen():
 
     
     fig.update_layout(
-        plot_bgcolor='white',  
+        #plot_bgcolor='white',  
         font_color='black',  
         xaxis_title='Product Type',
         yaxis_title='Total Quantity Sold',
@@ -969,18 +970,17 @@ def top_product_category_kitchen():
         'transaction_qty'].sum()
 
     
-    output_string = f"""
-    <b>Top Sold Product Category:</b> {top_product_category}<br>
-    <b>Top Sold Product Type:</b> {top_product_type}<br>
-    <b>Overall Max Selling Date:</b> {max_selling_date}<br>
-    <b>Overall Quantity on Max Date:</b> {overall_quantity_on_max_date}
-    """
 
     
     st.markdown(
         f"""
-        <div style='background-color: white; text-align: left; color: black; padding: 10px;'>
-            {output_string}
+        <div style='background-color: white; text-align: left; color: black; padding: 10px; width: fit-content; border: 1px solid #ccc;'>
+            <br>
+            <b>Top Sold Product Category:</b> {top_product_category}<br>
+            <b>Top Sold Product Type:</b> {top_product_type}<br>
+            <b>Overall Max Selling Date:</b> {max_selling_date}<br>
+            <b>Overall Quantity on Max Date:</b> {overall_quantity_on_max_date}
+            <br>
         </div>
         """,
         unsafe_allow_html=True
@@ -1005,20 +1005,15 @@ def lowest_selling_product_category_kitchen():
     
     overall_quantity_on_min_date = df_astoria[df_astoria['transaction_date'].dt.date == min_selling_date][
         'transaction_qty'].sum()
-
-    
-    output_string = f"""
-    <b>Lowest Sold Product Category:</b> {lowest_product_category}<br>
-    <b>Lowest Sold Product Type:</b> {lowest_product_type}<br>
-    <b>Overall Lowest Selling Date:</b> {min_selling_date}<br>
-    <b>Overall Quantity on Lowest Date:</b> {overall_quantity_on_min_date}
-    """
-
     
     st.markdown(
         f"""
-        <div style='background-color: white; text-align: left; color: black; padding: 10px;'>
-            {output_string}
+        <div style='background-color: white; text-align: left; color: black; padding: 10px; width: fit-content; border: 1px solid #ccc;'>
+            <br>
+            <b>Lowest Sold Product Category:</b> {lowest_product_category}<br>
+            <b>Lowest Sold Product Type:</b> {lowest_product_type}<br>
+            <b>Overall Lowest Selling Date:</b> {min_selling_date}<br>
+            <b>Overall Quantity on Lowest Date:</b> {overall_quantity_on_min_date}
         </div>
         """,
         unsafe_allow_html=True
@@ -1039,23 +1034,18 @@ def expensive_product_kitchen():
     cheapest_product = product_type_analysis.sort_values('unit_price').iloc[0]
 
     
-    output_string = f"""
-    **Expensive Product:** {expensive_product.name}  
-    **Average Price:** ${expensive_product['unit_price']:.2f}  
-    **Total Quantity:** {expensive_product['transaction_qty']}  
-
-    <br><br>
-
-    **Cheapest Product:** {cheapest_product.name}  
-    **Average Price:** ${cheapest_product['unit_price']:.2f}  
-    **Total Quantity:** {cheapest_product['transaction_qty']}
-    """
 
     
     st.markdown(
         f"""
-        <div style='background-color: white; text-align: left; color: black; padding: 20px;'>
-            {output_string}
+        <div style='background-color: white; text-align: left; color: black; padding: 10px; width: fit-content; border: 1px solid #ccc;'>
+            <br>
+            <b>Expensive Product:</b> {expensive_product.name} <br> 
+            <b>Average Price:</b> ${expensive_product['unit_price']:.2f}  <br> 
+            <b>Total Quantity:</b> {expensive_product['transaction_qty']}  <br> <br>
+            <b>Cheapest Product:</b> {cheapest_product.name}  <br> 
+            <b>Average Price:</b> ${cheapest_product['unit_price']:.2f}  <br> 
+            <b>Total Quantity:</b> {cheapest_product['transaction_qty']}
         </div>
         """,
         unsafe_allow_html=True
@@ -1076,7 +1066,7 @@ def Kitchen_Price_vs_Sell_Quantity():
     fig.update_layout(
         xaxis_title='Price',
         yaxis_title='Sell Quantity',
-        plot_bgcolor='white',  
+        #plot_bgcolor='white',  
         font_color='black',  
     )
 
@@ -1103,7 +1093,7 @@ def Hourly_Sales_in_Kitchen():
 
     
     fig.update_layout(
-        plot_bgcolor='white',  
+        #plot_bgcolor='white',  
         font_color='black',  
         xaxis_title='Hour of Day',
         yaxis_title='Total Quantity Sold'
@@ -1186,7 +1176,7 @@ def Increasing_Demand_of_Product_Types_in_Kitchen():
         title="Increasing Demand of Product Types in Hell's Kitchen",
         xaxis_title='Transaction Date',
         yaxis_title='Cumulative Transaction Quantity',
-        plot_bgcolor='white',
+        #plot_bgcolor='white',
         font_color='black'
     )
 
@@ -1216,7 +1206,7 @@ def Top_5_Most_Expensive_Product_Types_in_Kitchen():
 
     
     fig.update_layout(
-        plot_bgcolor='white',  
+        #plot_bgcolor='white',  
         font_color='black',  
         xaxis_title='Product Type',
         yaxis_title='Average Unit Price',
@@ -1251,7 +1241,7 @@ def Top_5_Cheapest_Product_Types_in_Kitchen():
 
     
     fig.update_layout(
-        plot_bgcolor='white',  
+        #plot_bgcolor='white',  
         font_color='black',  
         xaxis_title='Product Type',
         yaxis_title='Average Unit Price',
@@ -1452,7 +1442,7 @@ def Monthly_Sales_for_Lower_Manhattan():
         title='Monthly Sales for Lower Manhattan',
         xaxis_title='Month',
         yaxis_title='Total Sales',
-        plot_bgcolor='white',
+        #plot_bgcolor='white',
         font_color='black'
     )
  
@@ -1485,7 +1475,7 @@ def Percentage_and_Quantity_of_Product_Types_Sold_in_Lower_Manhattan():
     fig.update_layout(
         xaxis_title='Percentage of Total Sales',
         yaxis_title='Product Type',
-        plot_bgcolor='white',
+        #plot_bgcolor='white',
         font_color='black',
         yaxis=dict(
             title='Product Type',
@@ -1592,7 +1582,7 @@ def Lower_Manhattan_Price_vs_Sell_Quantity():
     fig.update_layout(
         xaxis_title='Price',
         yaxis_title='Sell Quantity',
-        plot_bgcolor='white',  
+        #plot_bgcolor='white',  
         font_color='black',  
     )
  
@@ -1617,7 +1607,7 @@ def Hourly_Sales_in_Lower_Manhattan():
     )
  
     fig.update_layout(
-        plot_bgcolor='white',  
+        #plot_bgcolor='white',  
         font_color='black',  
         xaxis_title='Hour',
         yaxis_title='Total Quantity Sold'
@@ -1690,7 +1680,7 @@ def Increasing_Demand_of_Product_Types_in_Lower_Manhattan():
         title='Increasing Demand of Product Types in Lower Manhattan',
         xaxis_title='Transaction Date',
         yaxis_title='Cumulative Transaction Quantity',
-        plot_bgcolor='white',
+        #plot_bgcolor='white',
         font_color='black'
     )
  
@@ -1720,7 +1710,7 @@ def Top_5_Most_Expensive_Product_Types_in_Lower_Manhattan_by_Unit_Price():
 
     
     fig.update_layout(
-        plot_bgcolor='white',  
+        #plot_bgcolor='white',  
         font_color='black',  
         xaxis_title='Product Type',
         yaxis_title='Average Unit Price',
@@ -1753,7 +1743,7 @@ def Top_5_Cheapest_Product_Types_in_Lower_Manhattan():
         color_discrete_sequence=['#CD5C5C']
     )
     fig.update_layout(
-        plot_bgcolor='white',  
+        #plot_bgcolor='white',  
         font_color='black',  
         xaxis_title='Product Type',
         yaxis_title='Average Unit Price',
