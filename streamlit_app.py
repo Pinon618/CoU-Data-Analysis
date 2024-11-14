@@ -437,7 +437,7 @@ def Percentage_and_Quantity_of_Product_Types_Sold_in_Astoria():
         y=product_type_sales.index,
         orientation='h',
         labels={'percentage_of_total_sales': 'Percentage of Total Sales', 'index': 'Product Type'},
-        title='Percentage and Quantity of Product Types Sold in Astoria',
+        title='Sold Product Type',
         text='transaction_qty'
     )
  
@@ -484,6 +484,35 @@ def Top_Sold_Product_Category():
         """,
         unsafe_allow_html=True
     )
+
+def pie_chart_astoria():
+    df_astoria = df[df['store_location'] == 'Astoria']
+    top_products_astoria = df_astoria.groupby('product_type')['transaction_qty'].sum().nlargest(5)
+
+    fig1 = px.pie(
+        values=top_products_astoria.values,
+        names=top_products_astoria.index,
+        title='Top 5 Product Types Sold in Astoria by Quantity',
+    )
+    fig1.update_layout(plot_bgcolor='white', font_color='black')
+
+    transaction_qty_counts = df_astoria.groupby('transaction_qty')['transaction_qty'].count()
+    specified_quantities = [1, 2, 3, 4, 6, 8]
+    filtered_counts = transaction_qty_counts[transaction_qty_counts.index.isin(specified_quantities)]
+
+    fig2 = px.pie(
+        values=filtered_counts.values,
+        names=filtered_counts.index,
+        title='Percentage of Quantity of Items Bought at a Time in Lower Manhattan',
+    )
+    fig2.update_layout(plot_bgcolor='white', font_color='black')
+
+    fig = make_subplots(rows=1, cols=2, specs=[[{'type': 'domain'}, {'type': 'domain'}]])
+    fig.add_trace(go.Pie(labels=top_products_astoria.index, values=top_products_astoria.values, title="Top 5 Products"), 1, 1)
+    fig.add_trace(go.Pie(labels=filtered_counts.index, values=filtered_counts.values, title="Specified Quantities"), 1, 2)
+    fig.update_layout(height=600, width=1000, title_text="Astoria Sales Analysis")
+    st.plotly_chart(fig)
+
 def Lowest_Sold_Product_Category():
     
     df_astoria = df[df['store_location'] == 'Astoria']
@@ -658,41 +687,29 @@ def Increasing_Demand_of_Product_Types_in_Astoria():
     
     st.plotly_chart(fig)
 def Top_5_Most_Expensive_Product_Types_in_Astoria_by_Unit_Price():
-    df['total_payment'] = df['unit_price'] * df['transaction_qty']
- 
-    
     df_astoria = df[df['store_location'] == 'Astoria']
- 
-    
     product_type_analysis = df_astoria.groupby('product_type').agg(
         {'unit_price': 'mean', 'transaction_qty': 'sum'}
     )
- 
-    
     top_5_expensive_products = product_type_analysis.sort_values('unit_price', ascending=False).head(5)
- 
-    
+
     fig = px.bar(
-        top_5_expensive_products,
-        x='transaction_qty',
-        y=top_5_expensive_products.index,
-        orientation='h',
-        labels={'transaction_qty': 'Total Quantity Sold', 'index': 'Product Type'},
+        x=top_5_expensive_products.index,
+        y=top_5_expensive_products['unit_price'],
+        text=top_5_expensive_products['transaction_qty'], 
+        labels={'x': 'Product Type', 'y': 'Average Unit Price', 'text': 'Total Quantity'},
         title='Top 5 Most Expensive Product Types in Astoria',
-        text='transaction_qty'  
     )
 
     fig.update_layout(
-        plot_bgcolor='white',  
-        font_color='black',  
-        xaxis_title='Total Quantity Sold',
-        yaxis_title='Product Type',
-        height=600  
+        plot_bgcolor='white',
+        font_color='black', 
+        xaxis_title='Product Type',
+        yaxis_title='Average Unit Price',
+        height=600,
     )
- 
-    
-    
     st.plotly_chart(fig)
+
 def Top_5_Cheapest_Product_Types_in_Astoria():
     df_astoria = df[df['store_location'] == 'Astoria']
 
@@ -754,15 +771,17 @@ def astoria():
         with subcol4:
             Percentage_and_Quantity_of_Product_Types_Sold_in_Astoria()
         Astoria_Price_vs_Sell_Quantity()
+        Top_5_Most_Expensive_Product_Types_in_Astoria_by_Unit_Price()
+        
     
     with col4:
         Hourly_Sales_in_Astoria()
 
         Increasing_Demand_of_Product_Types_in_Astoria()
-
-        Top_5_Most_Expensive_Product_Types_in_Astoria_by_Unit_Price()
-
+        pie_chart_astoria()
         Top_5_Cheapest_Product_Types_in_Astoria()
+
+        
 
 
 def Total_Sell_Kitchen():
@@ -917,7 +936,7 @@ def Quantity_of_Each_Product_Type_Sold_in_Kitchen():
         x=product_type_sales.index,
         y=product_type_sales.values,
         labels={'x': 'Product Type', 'y': 'Total Quantity Sold'},
-        title="Quantity of Each Product Type Sold in Astoria",
+        title="Sold Product Type",
     )
 
     
@@ -1051,7 +1070,7 @@ def Kitchen_Price_vs_Sell_Quantity():
 
     
     fig = px.line(price_quantity, x='unit_price', y='transaction_qty',
-                  title="Astoria: Price vs Sell Quantity")
+                  title="Hell's Kitchen: Price vs Sell Quantity")
 
     
     fig.update_layout(
@@ -1192,7 +1211,7 @@ def Top_5_Most_Expensive_Product_Types_in_Kitchen():
         y=top_5_expensive_products['unit_price'],
         text=top_5_expensive_products['transaction_qty'],  
         labels={'x': 'Product Type', 'y': 'Average Unit Price', 'text': 'Total Quantity'},
-        title="Top 5 Most Expensive Product Types in Astoria",
+        title="Top 5 Most Expensive Product Types in Hell's Kitchen",
     )
 
     
@@ -1226,7 +1245,7 @@ def Top_5_Cheapest_Product_Types_in_Kitchen():
         y=top_5_cheapest_products['unit_price'],
         text=top_5_cheapest_products['transaction_qty'],  
         labels={'x': 'Product Type', 'y': 'Average Unit Price', 'text': 'Total Quantity'},
-        title="Top 5 Cheapest Product Types in Astoria",
+        title="Top 5 Cheapest Product Types in Hell's Kitchen",
         color_discrete_sequence=['#CD5C5C']
     )
 
@@ -1276,14 +1295,15 @@ def hellkitchen():
         with subcol4:
             Quantity_of_Each_Product_Type_Sold_in_Kitchen()
         Kitchen_Price_vs_Sell_Quantity()
+        Top_5_Most_Expensive_Product_Types_in_Kitchen()
+
+        
     
     with col4:
         Hourly_Sales_in_Kitchen()
 
         Increasing_Demand_of_Product_Types_in_Kitchen()
         Kitchen_Sales_Analysis()
-        Top_5_Most_Expensive_Product_Types_in_Kitchen()
-
         Top_5_Cheapest_Product_Types_in_Kitchen()
 
 
@@ -1359,6 +1379,33 @@ def lower_total():
     )
     st.plotly_chart(fig)
 
+def pie_chart_lower():
+    df_astoria = df[df['store_location'] == 'Lower Manhattan']
+    top_products_astoria = df_astoria.groupby('product_type')['transaction_qty'].sum().nlargest(5)
+
+    fig1 = px.pie(
+        values=top_products_astoria.values,
+        names=top_products_astoria.index,
+        title='Top 5 Product Types Sold in Lower Manhattan by Quantity',
+    )
+    fig1.update_layout(plot_bgcolor='white', font_color='black')
+
+    transaction_qty_counts = df_astoria.groupby('transaction_qty')['transaction_qty'].count()
+    specified_quantities = [1, 2, 3, 4, 6, 8]
+    filtered_counts = transaction_qty_counts[transaction_qty_counts.index.isin(specified_quantities)]
+
+    fig2 = px.pie(
+        values=filtered_counts.values,
+        names=filtered_counts.index,
+        title='Percentage of Quantity of Items Bought at a Time in Lower Manhattan',
+    )
+    fig2.update_layout(plot_bgcolor='white', font_color='black')
+
+    fig = make_subplots(rows=1, cols=2, specs=[[{'type': 'domain'}, {'type': 'domain'}]])
+    fig.add_trace(go.Pie(labels=top_products_astoria.index, values=top_products_astoria.values, title="Top 5 Products"), 1, 1)
+    fig.add_trace(go.Pie(labels=filtered_counts.index, values=filtered_counts.values, title="Specified Quantities"), 1, 2)
+    fig.update_layout(height=600, width=1000, title_text="Lower Manhattan Sales Analysis")
+    st.plotly_chart(fig)
 
 def lower_sell_quantity():
 
@@ -1430,7 +1477,7 @@ def Percentage_and_Quantity_of_Product_Types_Sold_in_Lower_Manhattan():
         y=product_type_sales.index,
         orientation='h',
         labels={'percentage_of_total_sales': 'Percentage of Total Sales', 'index': 'Product Type'},
-        title='Percentage and Quantity of Product Types Sold in Lower Manhattan',
+        title='Sold Product Type',
         text='transaction_qty'
     )
  
@@ -1496,7 +1543,7 @@ def Lowest_Sold_Product_lower():
     
     st.markdown(
         f"""
-        <div style='background-color: white; text-align: left; color: black; padding: 10px; width: fit-content; border: 1px solid #ccc;'> #ccc;'>
+        <div style='background-color: white; text-align: left; color: black; padding: 10px; width: fit-content; border: 1px solid #ccc;'>
             <b>Lowest Sold Product Category:</b> {lowest_product_category}<br>
             <b>Lowest Sold Product Type:</b> {lowest_product_type}<br>
             <b>Overall Lowest Selling Date:</b> {min_selling_date}<br>
@@ -1651,38 +1698,36 @@ def Increasing_Demand_of_Product_Types_in_Lower_Manhattan():
     
     st.plotly_chart(fig)
 def Top_5_Most_Expensive_Product_Types_in_Lower_Manhattan_by_Unit_Price():
-    df['total_payment'] = df['unit_price'] * df['transaction_qty']
- 
     
-    df_lower = df[df['store_location'] == 'Lower Manhattan']
- 
+    df_lower = df[df['store_location'] == "Lower Manhattan"]
+
     
     product_type_analysis = df_lower.groupby('product_type').agg(
         {'unit_price': 'mean', 'transaction_qty': 'sum'}
     )
- 
+
     
     top_5_expensive_products = product_type_analysis.sort_values('unit_price', ascending=False).head(5)
- 
+
     
     fig = px.bar(
-        top_5_expensive_products,
-        x='transaction_qty',
-        y=top_5_expensive_products.index,
-        orientation='h',
-        labels={'transaction_qty': 'Total Quantity Sold', 'index': 'Product Type'},
-        title='Top 5 Most Expensive Product Types in Lower Manhattan',
-        text='transaction_qty'  
+        x=top_5_expensive_products.index,
+        y=top_5_expensive_products['unit_price'],
+        text=top_5_expensive_products['transaction_qty'],  
+        labels={'x': 'Product Type', 'y': 'Average Unit Price', 'text': 'Total Quantity'},
+        title="Top 5 Most Expensive Product Types in Lower Manhattan",
     )
 
+    
     fig.update_layout(
         plot_bgcolor='white',  
         font_color='black',  
-        xaxis_title='Total Quantity Sold',
-        yaxis_title='Product Type',
-        height=600  
+        xaxis_title='Product Type',
+        yaxis_title='Average Unit Price',
+        height=600,  
+        showlegend=False  
     )
- 
+
     
     
     st.plotly_chart(fig)
@@ -1747,14 +1792,17 @@ def lower():
         with subcol4:
             Percentage_and_Quantity_of_Product_Types_Sold_in_Lower_Manhattan()
         Lower_Manhattan_Price_vs_Sell_Quantity()
+        Top_5_Most_Expensive_Product_Types_in_Lower_Manhattan_by_Unit_Price()
+
     
     with col4:
         Hourly_Sales_in_Lower_Manhattan()
 
         Increasing_Demand_of_Product_Types_in_Lower_Manhattan()
 
-        Top_5_Most_Expensive_Product_Types_in_Lower_Manhattan_by_Unit_Price()
+        pie_chart_lower()
 
+        
         Top_5_Cheapest_Product_Types_in_Lower_Manhattan()
 
 def Total_Sales_january():
@@ -1781,12 +1829,6 @@ def Total_Sales_january():
             size=18,
             color="black"
         ),
-        
-        
-        
-        
-        
-        
     )
 
     
@@ -2011,7 +2053,7 @@ def Quantity_of_Each_Product_Type_Sold_in_January():
         x=sorted_product_type_sales.values,
         y=sorted_product_type_sales.index,
         orientation='h',
-        title='Quantity of Each Product Type Sold in January',
+        title='Sold Quantity of Each Product:January',
         labels={'x': 'Total Quantity', 'y': 'Product Type'},
     )
 
@@ -2386,7 +2428,7 @@ def Quantity_of_Each_Product_Type_Sold_in_February():
         x=sorted_product_type_sales.values,
         y=sorted_product_type_sales.index,
         orientation='h',
-        title='Quantity of Each Product Type Sold in February',
+        title='Sold Quantity of Each Product:February',
         labels={'x': 'Total Quantity', 'y': 'Product Type'},
     )
 
@@ -2761,7 +2803,7 @@ def Quantity_of_Each_Product_Type_Sold_in_March():
         x=sorted_product_type_sales.values,
         y=sorted_product_type_sales.index,
         orientation='h',
-        title='Quantity of Each Product Type Sold in March',
+        title='Sold Quantity of Each Product:March',
         labels={'x': 'Total Quantity', 'y': 'Product Type'},
     )
 
@@ -3137,7 +3179,7 @@ def Quantity_of_Each_Product_Type_Sold_in_April():
         x=sorted_product_type_sales.values,
         y=sorted_product_type_sales.index,
         orientation='h',
-        title='Quantity of Each Product Type Sold in April',
+        title='Sold Quantity of Each Product:April',
         labels={'x': 'Total Quantity', 'y': 'Product Type'},
     )
 
@@ -3514,7 +3556,7 @@ def Quantity_of_Each_Product_Type_Sold_in_May():
         x=sorted_product_type_sales.values,
         y=sorted_product_type_sales.index,
         orientation='h',
-        title='Quantity of Each Product Type Sold in May',
+        title='Sold Quantity of Each Product:May',
         labels={'x': 'Total Quantity', 'y': 'Product Type'},
     )
 
@@ -3890,7 +3932,7 @@ def Quantity_of_Each_Product_Type_Sold_in_June():
         x=sorted_product_type_sales.values,
         y=sorted_product_type_sales.index,
         orientation='h',
-        title='Quantity of Each Product Type Sold in June',
+        title='Sold Quantity of Each Product:June',
         labels={'x': 'Total Quantity', 'y': 'Product Type'},
     )
 
