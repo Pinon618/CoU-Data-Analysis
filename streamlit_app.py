@@ -161,12 +161,12 @@ def top_product():
     st.markdown("""
     <div style="border: 2px solid #007bff; padding: 15px; border-radius: 8px; background-color: #000000;">
     <h2 style="text-align:center; color:#007bff;">Sales Analysis Summary</h2>
-    <p><strong>Top Sales Product:</strong> {0} <br>(Total Sales: {1:.2f})</p>
-    <p><strong>Top Sales Date:</strong> {2} <br>(Total Sales: {3:.2f})</p>
-    <p><strong>Top Sales Quantity:</strong> {4} <br>(Quantity: {5})</p>
-    <p><strong>Least Sales Product:</strong> {6} <br>(Total Sales: {7:.2f})</p>
-    <p><strong>Most Expensive Product:</strong> {8} <br>(Price: {9:.2f})</p>
-    <p><strong>Least Expensive Product:</strong> {10} <br>(Price: {11:.2f})</p>
+    <p style= "color:#FFFFFF;"><strong style= "color:#FFFFFF;">Top Sales Product:</strong> {0} <br>(Total Sales: {1:.2f})</p>
+    <p style= "color:#FFFFFF;"><strong style= "color:#FFFFFF;">Top Sales Date:</strong> {2} <br>(Total Sales: {3:.2f})</p>
+    <p style= "color:#FFFFFF;"><strong style= "color:#FFFFFF;">Top Sales Quantity:</strong> {4} <br>(Quantity: {5})</p>
+    <p style= "color:#FFFFFF;"><strong style= "color:#FFFFFF;">Least Sales Product:</strong> {6} <br>(Total Sales: {7:.2f})</p>
+    <p style= "color:#FFFFFF;"><strong style= "color:#FFFFFF;">Most Expensive Product:</strong> {8} <br>(Price: {9:.2f})</p>
+    <p style= "color:#FFFFFF;"><strong style= "color:#FFFFFF;">Least Expensive Product:</strong> {10} <br>(Price: {11:.2f})</p>
     </div>
     """.format(top_product, top_product_sales, 
             top_sales_date.strftime('%Y-%m-%d'), top_sales_date_sales, 
